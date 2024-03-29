@@ -30,7 +30,7 @@ namespace OriginalCircuit.AltiumSharp.Records
         public bool LayerMasterStackV8ShowTopDielectric { get; internal set; }
         public bool LayerMasterStackV8ShowBottomDielectric { get; internal set; }
         public bool LayerMasterStackV8IsFlex { get; internal set; }
-        public List<(string Id, string Name, int LayerId, bool UsedByPrims, int DielType, double DielConst, Coord DielHeight, string DielMaterial, Coord COverLayEXPansiOn, Coord CopThick, int ComponentPlacement, bool MechEnabled)> LayerV8 { get; internal set; }
+        public List<(string Id, string Name, int LayerId, bool UsedByPrims, int DielType, double DielConst, Coord DielHeight, string DielMaterial, Coord COverLayEXPansiOn, Coord CopThick, int ComponentPlacement, bool MechEnabled, string MechKind)> LayerV8 { get; internal set; }
         public int TopType { get; set; }
         public double TopConst { get; set; }
         public Coord TopHeight { get; set; }
@@ -308,7 +308,7 @@ namespace OriginalCircuit.AltiumSharp.Records
             LayerV7.Add(("", 0, 0, false, Coord.FromMils(0), 0, 0, Coord.FromMils(0), "", 0));
             LayerV7.Add(("", 0, 0, false, Coord.FromMils(0), 0, 0, Coord.FromMils(0), "", 0));
             */
-            LayerV8 = new List<(string Id, string Name, int LayerId, bool UsedByPrims, int DielType, double DielConst, Coord DielHeight, string DielMaterial, Coord COverLayEXPansiOn, Coord CopThick, int ComponentPlacement, bool MechEnabled)>();
+            LayerV8 = new List<(string Id, string Name, int LayerId, bool UsedByPrims, int DielType, double DielConst, Coord DielHeight, string DielMaterial, Coord COverLayEXPansiOn, Coord CopThick, int ComponentPlacement, bool MechEnabled, string MechKind)>();
             V9StackLayer = new List<(string Id, string Name, int LayerId, bool UsedByPrims, int DielType, double DielConst, Coord DielHeight, string DielMaterial, Coord COverLayEXPansiOn, Coord CopThick, int ComponentPlacement)>();
             V9CacheLayer = new List<(int LayerId, bool UsedByPrims, string Id, string Name, int DielType, double DielConst, Coord DielHeight, string DielMaterial, Coord COverLayEXPansiOn, Coord CopThick, int ComponentPlacement, Coord PullBackDistance, bool MechEnabled)>();
             BigVisibleGridSize = 0;
@@ -568,7 +568,7 @@ namespace OriginalCircuit.AltiumSharp.Records
             int v8LayerMin = p.Select(kv => Regex.Match(kv.Item1, string.Format(CultureInfo.InvariantCulture, "LAYER_V8_{0}ID", @"(\d+)")).Groups[1].Value).Where(v => !string.IsNullOrEmpty(v)).DefaultIfEmpty("0").Min(v => int.Parse(v, CultureInfo.InvariantCulture));
             int v8LayerCount = p.Select(kv => Regex.Match(kv.Item1, string.Format(CultureInfo.InvariantCulture, "LAYER_V8_{0}ID", @"(\d+)")).Groups[1].Value).Where(v => !string.IsNullOrEmpty(v)).Count();
 
-            LayerV8 = new List<(string Id, string Name, int LayerId, bool UsedByPrims, int DielType, double DielConst, Coord DielHeight, string DielMaterial, Coord COverLayEXPansiOn, Coord CopThick, int ComponentPlacement, bool MechEnabled)>();
+            LayerV8 = new List<(string Id, string Name, int LayerId, bool UsedByPrims, int DielType, double DielConst, Coord DielHeight, string DielMaterial, Coord COverLayEXPansiOn, Coord CopThick, int ComponentPlacement, bool MechEnabled, string MechKind)>();
 
             for (int i = v8LayerMin; i < v8LayerCount; i++)
             {
@@ -603,7 +603,8 @@ namespace OriginalCircuit.AltiumSharp.Records
                         coverlayExpansion,
                         copperThickness,
                         p[fmt("LAYER_V8_{0}COMPONENTPLACEMENT", i)].AsIntOrDefault(),
-                        p[fmt("LAYER_V8_{0}MECHENABLED", i)].AsBool()
+                        p[fmt("LAYER_V8_{0}MECHENABLED", i)].AsBool(),
+                        p[fmt("LAYER_V8_{0}MECHKIND", i)].AsString()
                     )
                 );
             }
@@ -935,6 +936,7 @@ namespace OriginalCircuit.AltiumSharp.Records
                     p.Add(fmt("LAYER_V8_{0}COPTHICK", i), LayerV8[i].CopThick);
                     p.Add(fmt("LAYER_V8_{0}COMPONENTPLACEMENT", i), LayerV8[i].ComponentPlacement);
                     p.Add(fmt("LAYER_V8_{0}MECHENABLED", i), LayerV8[i].MechEnabled, i < 15 || (i > 26 && i < 40));
+                    p.Add(fmt("LAYER_V8_{0}MECHKIND", i), LayerV8[i].MechKind);
                 }
             }
 
