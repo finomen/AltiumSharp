@@ -86,6 +86,7 @@ namespace OriginalCircuit.AltiumSharp
                     if (ndxRecord > recordCount)
                     {
                         EmitWarning("Number of existing records exceed the header's record count");
+                        EmitWarning("Number of existing records exceed the header's record count");
                     }
 
                     // save the stream position so we can later recover the raw component data
