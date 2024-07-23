@@ -136,6 +136,7 @@ namespace OriginalCircuit.AltiumSharp
                 var component = (SchComponent)primitives.First();
 
                 AssignOwners(primitives);
+                primitives.Where(x => x is SchImplementation).ToList().ForEach(component.Add);
 
                 EndContext();
 
